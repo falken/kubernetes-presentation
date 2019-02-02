@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: app-webserver
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: simple
+        component: webserver-tomcat
+    spec:
+      containers:
+        - name: webserver
+          image: tomcat:latest
+          ports:
+            - containerPort: 8080
+              name: web
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-tomcat
+  labels:
+    app: simple
+    component: webserver-tomcat
+spec:
+  ports:
+    - port: 8080
+      name: web
+  selector:
+    app: simple
+    component: webserver-tomcat
+
+
+
+
