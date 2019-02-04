@@ -1,0 +1,8 @@
+provider:
+  name: faas
+  gateway: http://gateway.openfaas.local
+functions:
+  hello-node:
+    lang: node
+    handler: ./hello-node
+    image: falken/hello-node:latest

@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: app-service
+  labels:
+    app: app-service
+spec:
+  selector:
+    app: app-ws
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: app-ws
+spec:
+  selector:
+    matchLabels:
+      app: app-ws
+  serviceName: "app-service"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: app-ws
+    spec:
+      containers:
+        - name: webserver
+          image: tomcat:latest
+          ports:
+            - containerPort: 8080
+              name: web

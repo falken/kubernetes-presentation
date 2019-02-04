@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  labels:
+    app: app-service
+spec:
+  clusterIP: None
+  ports:
+    - port: 80
+      name: web
+  selector:
+    app: app-ws
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: app-ws
+spec:
+  selector:
+    matchLabels:
+      app: app-ws
+  serviceName: "app-service"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: app-ws
+    spec:
+      containers:
+        - name: webserver
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+              name: web

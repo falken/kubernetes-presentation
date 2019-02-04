@@ -1,0 +1,13 @@
+{
+  "name": "function",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "deploy": "faas-cli build -f hello-node.yaml && faas-cli push -f hello-node.yaml && faas-cli deploy -f hello-node.yaml",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

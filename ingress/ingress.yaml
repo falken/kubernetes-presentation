@@ -1,0 +1,84 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: simple-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: app-service-tomcat
+          servicePort: 8080
+      - path: /nginx
+        backend:
+          serviceName: app-service-nginx
+          servicePort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service-nginx
+  labels:
+    component: app-service-nginx
+spec:
+  ports:
+    - port: 80
+      name: web
+  selector:
+    app: app-ws-nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-webserver-nginx
+spec:
+  selector:
+    matchLabels:
+      app: app-ws-nginx
+  template:
+    metadata:
+      labels:
+        app: app-ws-nginx
+    spec:
+      containers:
+        - name: webserver
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+              name: web
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service-tomcat
+  labels:
+    component: app-service-tomcat
+spec:
+  ports:
+    - port: 8080
+      name: web
+  selector:
+    app: app-ws-tomcat
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-ws-tomcat
+spec:
+  selector:
+    matchLabels:
+      app: app-ws-tomcat
+  template:
+    metadata:
+      labels:
+        app: app-ws-tomcat
+    spec:
+      containers:
+        - name: webserver
+          image: tomcat:latest
+          ports:
+            - containerPort: 80
+              name: web
